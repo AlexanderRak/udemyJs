@@ -1,9 +1,18 @@
-// "use strict";
+"use strict";
 /* jshint esversion: 6 */
 
+let money, time;
 
-let money = +prompt("Ваш бюджет на месяц?", ''),
+function start() {
+  money = +prompt("Ваш бюджет на месяц?", '');
   time = prompt('Введите дату в формате YYYY-MM-DD', '');
+
+  while(isNaN(money) || money == "" || money == null) {
+    money = +prompt("Ваш бюджет на месяц?", '');
+  }
+}
+start();
+
 
 let appData = {
   budget: money,
@@ -11,71 +20,63 @@ let appData = {
   optionalExpenses: {},
   income: [],
   timeData: time,
-  savings: false
+  savings: true
 };
 
-for (let i = 0; i < 2; i++) {
-  let a = prompt("Введите обязательную статью расходов в этом месяце", '');
-  b = prompt("Во сколько обойдется?", '');
-
-  if ((typeof (a)) === 'string' && (typeof (a) != null) && (typeof (b) != null) && a != '' && b != '' && a.length < 50) {
-    console.log("Всё сработало");
-    appData.expenses[a] = b;
-  } else {
-    console.log("Плохой результат");
-    i--;
+function shooseExpenses() {
+  for (let i = 0; i < 2; i++) {
+    let a = prompt("Введите обязательную статью расходов в этом месяце", ''),
+    b = prompt("Во сколько обойдется?", '');
+  
+    if ((typeof (a)) === 'string' && (typeof (a) != null) && (typeof (b) != null) && a != '' && b != '' && a.length < 50) {
+      console.log("Всё сработало");
+      appData.expenses[a] = b;
+    } else {
+      console.log("Плохой результат");
+      i--;
+    }
   }
 }
+shooseExpenses();
 
-
-// Используем цикл do while
-/*
-let i = 0;
-do {
-  let a = prompt("Введите обязательную статью расходов в этом месяце", '');
-  b = prompt("Во сколько обойдется?", '');
-
-  if ((typeof (a)) === 'string' && (typeof (a) != null) && (typeof (b) != null) && a != '' && b != '' && a.length < 50) {
-    console.log("Всё сработало");
-    appData.expenses[a] = b;
-  } else {
-    console.log("Плохой результат");
-    i--;
+// Функция для определения необязательных расходов
+function chooseOptExpenses() {
+  for(let i = 0; i <=3; i++) {
+    let questionOptExpenses = +prompt("Статья необязательных расходов?", '');
+      appData.optionalExpenses[i] = questionOptExpenses;
+      console.log(appData.optionalExpenses);
   }
-  i++;
-} while (i < 2);
-*/
+}
+chooseOptExpenses();
 
+// Расчет дневного бюджета
+function detectDayBudget() {
+  appData.moneyPerDay = (appData.budget / 30).toFixed();
+  alert("Бюджет на 1 день составляет: " + appData.moneyPerDay);
+}
+detectDayBudget();
 
-// Используем цикл while
-/*
-let i = 0;
-while (i < 2) {
-  let a = prompt("Введите обязательную статью расходов в этом месяце", '');
-  b = prompt("Во сколько обойдется?", '');
-
-  if ((typeof (a)) === 'string' && (typeof (a) != null) && (typeof (b) != null) && a != '' && b != '' && a.length < 50) {
-    console.log("Всё сработало");
-    appData.expenses[a] = b;
+// Расчет уровня достатка
+function detectLevel() {
+  if (appData.moneyPerDay < 100) {
+    console.log("Это минимальный уровень достатка");
+  } else if (appData.moneyPerDay > 100 && appData.moneyPerDay < 2000) {
+    console.log("Это средний уровень достатка");
+  } else if (appData.moneyPerDay > 2000) {
+    console.log("Это высокий уровень достатка");
   } else {
-    console.log("Плохой результат");
-    i--;
+    console.log("Упппс Ошибка");
   }
-  i++;
 }
-*/
+detectLevel();
 
-appData.moneyPerDay = appData.budget / 30;
-alert("Бюджет на 1 день составляет: " + appData.moneyPerDay);
+function cheakSavings() {
+  if(appData.savings == true) {
+    let save = +prompt("Какова сумма накопления?"),
+        percent = +prompt("Под какой процент?");
 
-if (appData.moneyPerDay < 100) {
-  console.log("Это минимальный уровень достатка");
-} else if (appData.moneyPerDay > 100 && appData.moneyPerDay < 2000) {
-  console.log("Это средний уровень достатка");
-} else if (appData.moneyPerDay > 2000) {
-  console.log("Это высокий уровень достатка");
-} else {
-  console.log("Упппс Ошибка");
+    appData.monthIncore = save / 100 / 12*percent;
+    alert("Доход в месяц с вашего дипозита: " + appData.monthIncore);
+  }
 }
-
-console.log(appData);
+cheakSavings();
